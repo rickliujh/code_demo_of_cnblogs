@@ -32,6 +32,11 @@ func main() {
 		Number: 3,
 	}, nil)
 
+	ctx = context.WithValue(ctx, &TestData{
+		Name:   "key5",
+		Number: 4,
+	}, nil)
+
 	// get keys and values
 	m := GetKeyValues(ctx)
 	printMapKeyValue(m)
@@ -40,6 +45,8 @@ func main() {
 	// [key: &{Name:key3 Number:2}] [value: value3]
 	// [key: &{Name:key2 Number:1}] [value: value2]
 	// [key: key1] [value: value1]
+	// [key: &{Name:key5 Number:4}] [value: <nil>]
+	// [key: &{Name:key4 Number:3}] [value: <nil>]
 }
 
 type TestData struct {
