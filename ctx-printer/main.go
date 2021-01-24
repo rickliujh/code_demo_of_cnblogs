@@ -11,7 +11,15 @@ func main() {
 	// build a context for test
 	ctx := context.Background()
 
+	// iemp := *(*iface)(unsafe.Pointer(&ctx))
+	// emp := *(*emptyCtx)(unsafe.Pointer(iemp.data))
+	// fmt.Println(emp)
+
 	ctx = context.WithValue(ctx, "key1", "value1")
+
+	// iemp = *(*iface)(unsafe.Pointer(&ctx))
+	// emp = *(*emptyCtx)(unsafe.Pointer(iemp.data))
+	// fmt.Println(emp)
 
 	ctx, _ = context.WithCancel(ctx)
 
@@ -26,6 +34,11 @@ func main() {
 		Name:   "key3",
 		Number: 2,
 	}, "value3")
+
+	ctx = context.WithValue(ctx, &TestData{
+		Name:   "key4",
+		Number: 3,
+	}, nil)
 
 	// get keys and values
 	m := GetKeyValues(ctx)
@@ -46,6 +59,8 @@ type iface struct {
 	itab, data uintptr
 }
 
+type emptyCtx int
+
 type valueCtx struct {
 	context.Context
 	key, val interface{}
@@ -59,12 +74,12 @@ func GetKeyValues(ctx context.Context) map[interface{}]interface{} {
 
 func getKeyValue(ctx context.Context, m map[interface{}]interface{}) {
 	ictx := *(*iface)(unsafe.Pointer(&ctx))
-	if ictx.data == 0 {
+	if ictx.data == 0 || int(*(*emptyCtx)(unsafe.Pointer(ictx.data))) == 0 {
 		return
 	}
 
 	valCtx := (*valueCtx)(unsafe.Pointer(ictx.data))
-	if valCtx != nil && valCtx.key != nil && valCtx.val != nil {
+	if valCtx != nil && valCtx.key != nil {
 		m[valCtx.key] = valCtx.val
 	}
 	getKeyValue(valCtx.Context, m)
