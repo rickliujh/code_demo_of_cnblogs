@@ -11,15 +11,7 @@ func main() {
 	// build a context for test
 	ctx := context.Background()
 
-	// iemp := *(*iface)(unsafe.Pointer(&ctx))
-	// emp := *(*emptyCtx)(unsafe.Pointer(iemp.data))
-	// fmt.Println(emp)
-
 	ctx = context.WithValue(ctx, "key1", "value1")
-
-	// iemp = *(*iface)(unsafe.Pointer(&ctx))
-	// emp = *(*emptyCtx)(unsafe.Pointer(iemp.data))
-	// fmt.Println(emp)
 
 	ctx, _ = context.WithCancel(ctx)
 
